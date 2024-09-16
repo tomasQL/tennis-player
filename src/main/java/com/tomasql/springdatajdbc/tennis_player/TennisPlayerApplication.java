@@ -37,5 +37,8 @@ public class TennisPlayerApplication implements CommandLineRunner {
         logger.info("\nJugador con ID 4: {}", dao.getPlayerById(4));
         logger.info("\nEliminando al Jugador con ID 2: {}", dao.deletePlayerById(2));
         logger.info("\nDatos de todos los Jugadores: {}", dao.getAllPlayers());
+        logger.info("\nInsertando el jugador 4: {}", dao.insertPlayer(
+                new Player(2, "Jugador X", "France", new Date(System.currentTimeMillis()), 2 )));
+        logger.info("\nLos jugadores Franceses son: {}", dao.getPlayerByNacionalidad("France"));
     }
 }

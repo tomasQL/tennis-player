@@ -3,8 +3,11 @@ package com.tomasql.springdatajdbc.tennis_player;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.List;
 
@@ -65,5 +68,23 @@ public class PlayerDao {
         String sql = "CREATE TABLE TOURNAMENT (ID INTEGER, Nombre VARCHAR(50), Ubicacion VARCHAR(50), PRIMARY KEY(ID))";
         jdbcTemplate.execute(sql);
         System.out.println("Tabla creada ...");
+    }
+
+    private static final class PlayerMapper implements RowMapper {
+        @Override
+        public Player mapRow(ResultSet resultSet, int rowNum) throws SQLException {
+            Player player = new Player();
+            player.setId(resultSet.getInt("id"));
+            player.setNombre(resultSet.getString("Nombre"));
+            player.setNacionalidad(resultSet.getString("Nacionalidad"));
+            player.setFecha_nacimiento(resultSet.getDate("Fecha_nacimiento"));
+            player.setTitulos_ganados(resultSet.getInt("Titulos_ganados"));
+            return player;
+        }
+    }
+
+    public List<Player> getPlayerByNacionalidad(String nacionalidad) {
+        String sql = "SELECT * FROM PLAYER WHERE Nacionalidad = ?";
+        return jdbcTemplate.query(sql, new PlayerMapper(), new Object[] {nacionalidad});
     }
 }
